@@ -8,6 +8,8 @@ export class FileUploadService {
 
   constructor(private http: HttpClient) { }
   uploadFile(data: File) {
-    return this.http.post("http://localhost:3000/upload/no-encryption", data);
+    const formData = new FormData();
+    formData.append("file", data);
+    return this.http.post("http://localhost:3000/upload/no-encryption", formData);
   }
 }
