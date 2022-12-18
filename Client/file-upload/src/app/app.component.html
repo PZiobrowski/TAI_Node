@@ -1,8 +1,64 @@
-<input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+<div class="flex">
+  <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
 
-<div class="file-upload">
-  {{fileName || "Brak pliku"}}
-  <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-      <mat-icon>attach_file</mat-icon>
+  <div class="file-upload">
+    {{fileName || "Brak pliku"}}
+    <button mat-mini-fab color="primary" (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+    </button>
+
+    <button mat-mini-fab color="warn" class="delete-btn" (click)="onDeleteFile()">
+      <mat-icon>delete_forever</mat-icon>
   </button>
+  </div>
+</div>
+
+<div class="flex margin">
+  <button mat-raised-button color="primary" (click)="upload()">
+    <span *ngIf="uploadLoading$ | async">
+      Ładowanie...
+    </span>
+    <span *ngIf="(uploadLoading$ | async) === false">Upload bez szyfrowania</span>
+  </button>
+</div>
+
+<div class="algorithms">
+  
+  <mat-card class="actions">
+    <mat-card-header class="flex">
+      <mat-card-title>AES256</mat-card-title>
+    </mat-card-header>
+    <button mat-raised-button color="primary" (click)="encryptAES()">
+      <span *ngIf="encryptAESLoading$ | async">
+        Ładowanie...
+      </span>
+      <span *ngIf="(encryptAESLoading$ | async) === false">Szyfrowanie całościowe</span>
+    </button>
+    <button mat-raised-button color="primary" (click)="streamAES()">
+      <span *ngIf="streamAESLoading$ | async">
+        Ładowanie...
+      </span>
+      <span *ngIf="(streamAESLoading$ | async) === false">Szyfrowanie strumieniowe</span>
+    </button>
+
+  </mat-card>
+
+  <mat-card class="actions">
+    <mat-card-header class="flex"f>
+      <mat-card-title>RSA2048</mat-card-title>
+    </mat-card-header>
+    <button mat-raised-button color="primary" (click)="encryptAES()">
+      <span *ngIf="encryptRSALoading$ | async">
+        Ładowanie...
+      </span>
+      <span *ngIf="(encryptRSALoading$ | async) === false">Szyfrowanie całościowe</span>
+    </button>
+    <button mat-raised-button color="primary" (click)="streamAES()">
+      <span *ngIf="streamRSALoading$ | async">
+        Ładowanie...
+      </span>
+      <span *ngIf="(streamRSALoading$ | async) === false">Szyfrowanie strumieniowe</span>
+    </button>
+
+  </mat-card>
 </div>

@@ -1,3 +1,34 @@
 .file-input {
     display: none;
 }
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.margin {
+    margin-top: 3rem;
+    margin-bottom: 5rem;
+}
+
+.algorithms {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.actions {
+    width: 40%;
+    button {
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+.delete-btn {
+    margin-left: 10px;
+}
