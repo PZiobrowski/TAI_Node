@@ -20,7 +20,7 @@ export class FileUploadService {
 
   uploadFile(data: File | null) {
     this.uploadLoading.next(true);
-    const file = this._prepareData;
+    const file = (data == null) ? null : this._prepareData(data);
     this.http.post("http://localhost:3000/upload/no-encryption", file)
     .pipe(finalize(() => this.uploadLoading.next(false)))
     .subscribe({
@@ -34,16 +34,23 @@ export class FileUploadService {
   }
 
   streamFileRSA(data: File) {
-    
+
   }
 
 
-  encryptFileAES(data: File) {
-
+  encryptFileAES(data: File | null) {
+    this.uploadLoading.next(true);
+    const file = (data == null) ? null : this._prepareData(data);
+    this.http.post("http://localhost:3000/upload/encryption", file)
+    .pipe(finalize(() => this.uploadLoading.next(false)))
+    .subscribe({
+      next: ((response) => {this.openToast("Udało się!")}),
+      error: ((error) => {this.openToast("Wystąpił błąd!")})
+    });
   }
 
   streamFileAES(data: File) {
-    
+
   }
 
 

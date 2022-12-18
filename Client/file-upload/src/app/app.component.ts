@@ -61,7 +61,7 @@ export class AppComponent {
 
     encryptAES() {
       if(this._validateFile()) {
-
+        this.fileService.encryptFileAES(this.file)
       }
     }
 
