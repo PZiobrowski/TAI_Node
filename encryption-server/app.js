@@ -3,18 +3,13 @@ const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const _ = require('lodash');
 const crypto = require('crypto');
-const { fstat } = require('fs');
 const fs = require('fs');
 const app = express()
 const port = 3000
 
-const key = process.env.KEY
-key = crypto.createHash('sha256').update(String(key)).digest('base64').substr(0, 32);
-
-const salt = process.env.SALT
-salt = crypto.randomBytes(8).toString("hex")
+const key = crypto.createHash('sha256').update(String(process.env.KEY)).digest('base64').slice(0, 32);
+const salt = process.env.SALT || crypto.randomBytes(8).toString("hex");
 
 app.use(fileUpload({
   createParentPath: true
@@ -35,7 +30,7 @@ app.post('/upload/no-encryption', async (req, res) => {
           });
       } else {
           let file = req.files.file;
-          
+
           file.mv('./uploads/' + file.name);
 
           //send response
@@ -100,7 +95,7 @@ app.post('/upload/decryption', async (req, res) => {
 
           const decrypted = cryptFileWithSalt(file, true);
 
-          console.log("dupa2")   
+          console.log("dupa2")
 
           //send response
           if (file) {
