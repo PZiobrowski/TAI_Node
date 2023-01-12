@@ -34,52 +34,28 @@ export class AppComponent {
     }
 
     download() {
-
+      this.fileService.downloadFile();
     }
 
-    encryptRSA() {
+    encrypt(type: string) {
+      if(this._validateFile()) {
+        this.fileService.encryptFile(this.file, type);
+      }
+    }
+
+    decrypt(type: string) {
+      if(this._validateFile()) {
+        this.fileService.decryptFile(this.file, type);
+      }
+    }
+
+    streamEncrypt(type: string) {
       if(this._validateFile()) {
 
       }
     }
 
-    streamEncryptRSA() {
-      if(this._validateFile()) {
-
-      }
-    }
-
-    decryptRSA() {
-      if(this._validateFile()) {
-
-      }
-    }
-
-    streamDecryptRSA() {
-      if(this._validateFile()) {
-
-      }
-    }
-
-    encryptAES() {
-      if(this._validateFile()) {
-        this.fileService.encryptFileAES(this.file)
-      }
-    }
-
-    streamEncryptAES() {
-      if(this._validateFile()) {
-
-      }
-    }
-
-    decryptAES() {
-      if(this._validateFile()) {
-        this.fileService.encryptFileAES(this.file)
-      }
-    }
-
-    streamDecryptAES() {
+    streamDecrypt(type: string) {
       if(this._validateFile()) {
 
       }
