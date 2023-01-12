@@ -8,21 +8,15 @@ import { BehaviorSubject, finalize } from 'rxjs';
 })
 export class FileUploadService {
 
-  uploadLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  encryptAESLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  streamAESLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  encryptRSALoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  streamRSALoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  fileUploaded$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar) { }
 
   uploadFile(data: File | null) {
-    this.uploadLoading.next(true);
     const file = (data == null) ? null : this._prepareData(data);
     this.http.post("http://localhost:3000/upload/no-encryption", file)
-    .pipe(finalize(() => this.uploadLoading.next(false)))
+    .pipe()
     .subscribe({
       next: ((response) => {this.openToast("Udało się!")}),
       error: ((error) => {this.openToast("Wystąpił błąd!")})
@@ -39,10 +33,9 @@ export class FileUploadService {
 
 
   encryptFileAES(data: File | null) {
-    this.uploadLoading.next(true);
     const file = (data == null) ? null : this._prepareData(data);
     this.http.post("http://localhost:3000/upload/encryption", file)
-    .pipe(finalize(() => this.uploadLoading.next(false)))
+    .pipe()
     .subscribe({
       next: ((response) => {this.openToast("Udało się!")}),
       error: ((error) => {this.openToast("Wystąpił błąd!")})
@@ -54,12 +47,16 @@ export class FileUploadService {
   }
 
 
-  openToast(message: string) {
+  openToast(message: string, duration?: number) {
     this._snackBar.open(message, 'Zamknij', {
       horizontalPosition: "right",
       verticalPosition: "top",
-      duration: 3000
+      duration: duration
     })
+  }
+
+  updateFileState(value: boolean) {
+    this.fileUploaded$.next(value);
   }
 
 

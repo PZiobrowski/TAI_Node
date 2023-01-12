@@ -10,23 +10,9 @@ import { FileUploadService } from './service/file-upload.service';
 export class AppComponent {
     fileName = '';
     file: File | null = null;
-
-    uploadLoading$: Observable<boolean>;
-
-    encryptRSALoading$: Observable<boolean>;
-    streamRSALoading$: Observable<boolean>;
-
-    encryptAESLoading$: Observable<boolean>;
-    streamAESLoading$: Observable<boolean>;
-    constructor(private fileService: FileUploadService) {
-      this.uploadLoading$ = this.fileService.uploadLoading;
-
-      this.encryptRSALoading$ = this.fileService.encryptRSALoading;
-      this.streamRSALoading$ = this.fileService.streamRSALoading;
-
-      this.encryptAESLoading$ = this.fileService.encryptAESLoading;
-      this.streamAESLoading$ = this.fileService.streamAESLoading;
-    }
+    fileUploaded$: Observable<boolean> = this.fileService.fileUploaded$;
+    loading$: Observable<boolean> = this.fileService.loading$;
+    constructor(private fileService: FileUploadService) {}
 
     onDeleteFile() {
       this.file = null;
@@ -47,13 +33,29 @@ export class AppComponent {
       }
     }
 
+    download() {
+
+    }
+
     encryptRSA() {
       if(this._validateFile()) {
 
       }
     }
 
-    streamRSA() {
+    streamEncryptRSA() {
+      if(this._validateFile()) {
+
+      }
+    }
+
+    decryptRSA() {
+      if(this._validateFile()) {
+
+      }
+    }
+
+    streamDecryptRSA() {
       if(this._validateFile()) {
 
       }
@@ -65,7 +67,19 @@ export class AppComponent {
       }
     }
 
-    streamAES() {
+    streamEncryptAES() {
+      if(this._validateFile()) {
+
+      }
+    }
+
+    decryptAES() {
+      if(this._validateFile()) {
+        this.fileService.encryptFileAES(this.file)
+      }
+    }
+
+    streamDecryptAES() {
       if(this._validateFile()) {
 
       }
@@ -73,7 +87,7 @@ export class AppComponent {
 
     private _validateFile() {
       if(!this.file) {
-        this.fileService.openToast("Brak wybranego pliku!");
+        this.fileService.openToast("Brak wybranego pliku!", 3000);
         return false;
       } else {
         return true;
