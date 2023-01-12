@@ -95,7 +95,7 @@ app.post('/upload/encryption', async (req, res) => {
           //send response
           res.send({
               status: true,
-              message: 'File is uploaded',
+              message: 'File is encrypted',
               data: {
                   name: randomName,
                   mimetype: file.mimetype,
@@ -130,19 +130,40 @@ app.post('/upload/decryption', async (req, res) => {
             decrypted = cryptFileRSA(file, true);
           }
 
+          randomName = Math.floor(Math.random() * 999999999) + file.name;
+
+          fs.createWriteStream('./uploads/' + randomName).write(decrypted)
+
           //send response
-          if (file) {
-            res.writeHead(200, {
-                'Content-Type': file.mimetype,
-                'Content-disposition': 'attachment;filename=' + 'encrypted_' + file.name,
-                'Connection': 'close',
-            })
-        } else {
-            res.writeHead(200, {
-                'Connection': 'close'
-            })
-        }
-        res.end(decrypted);
+          res.send({
+            status: true,
+            message: 'File is decrypted',
+            data: {
+                name: randomName,
+                mimetype: file.mimetype,
+                size: file.size,
+                time: 0
+            }
+        });   
+
+      }
+  } catch (err) {
+      console.log(err)
+      res.status(500).send(err);
+  }
+});
+
+app.post('/download', async (req, res) => {
+  try {
+      if(!req.body.fileName) {
+          res.send({
+              status: false,
+              message: 'No file name specified'
+          });
+      } else {
+          let fileName = req.body.fileName;
+
+        res.sendFile(__dirname  + '/uploads/' + fileName)
       }
   } catch (err) {
       console.log(err)
