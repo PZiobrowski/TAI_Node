@@ -79,6 +79,8 @@ app.post('/upload/encryption', async (req, res) => {
           let file = req.files.file;
           let encrypted
 
+          const start = performance.now();
+
           if(req.body.algorithm == '0') {
             console.log("encryption with aes")
             encrypted = cryptFileAESWithSalt(file, false);
@@ -87,6 +89,10 @@ app.post('/upload/encryption', async (req, res) => {
             console.log("encryption with rsa")
             encrypted = cryptFileRSA(file, false);
           }
+
+          const duration = (performance.now() - start).toPrecision(2)
+
+          console.log("measured encryption duration " + duration)
 
           randomName = Math.floor(Math.random() * 999999999) + file.name;
 
@@ -100,7 +106,7 @@ app.post('/upload/encryption', async (req, res) => {
                   name: randomName,
                   mimetype: file.mimetype,
                   size: file.size,
-                  time: 0
+                  time: duration
               }
           });
       }
@@ -121,6 +127,8 @@ app.post('/upload/decryption', async (req, res) => {
           let file = req.files.file;
           let decrypted
 
+          const start = performance.now();
+
           if(req.body.algorithm == '0') {
             console.log("decryption with aes")
             decrypted = cryptFileAESWithSalt(file, true);
@@ -129,6 +137,9 @@ app.post('/upload/decryption', async (req, res) => {
             console.log("decryption with rsa")
             decrypted = cryptFileRSA(file, true);
           }
+
+          const duration = (performance.now() - start).toPrecision(2)
+          console.log("measured decryption duration " + duration)
 
           randomName = Math.floor(Math.random() * 999999999) + file.name;
 
@@ -142,7 +153,7 @@ app.post('/upload/decryption', async (req, res) => {
                 name: randomName,
                 mimetype: file.mimetype,
                 size: file.size,
-                time: 0
+                time: duration
             }
         });   
 
