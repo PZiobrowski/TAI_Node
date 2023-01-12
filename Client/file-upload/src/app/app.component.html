@@ -29,19 +29,19 @@
       <mat-card-title>AES256</mat-card-title>
     </mat-card-header>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="encryptAES()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="encrypt('0')">
       Szyfrowanie całościowe
     </button>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamEncryptAES()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamEncrypt('0')">
       Szyfrowanie strumieniowe
     </button>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="decryptAES()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="decrypt('0')">
       Deszyfrowanie całościowe
     </button>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamDecryptAES()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamDecrypt('0')">
       Deszyfrowanie strumieniowe
     </button>
 
@@ -52,19 +52,19 @@
       <mat-card-title>RSA2048</mat-card-title>
     </mat-card-header>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="encryptRSA()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="encrypt('1')">
       Szyfrowanie całościowe
     </button>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamEncryptRSA()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamEncrypt('1')">
       Szyfrowanie strumieniowe
     </button>
 
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="decryptRSA()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="decrypt('1')">
       Deszyfrowanie całościowe
     </button>
     
-    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamDecryptRSA()">
+    <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamDecrypt('1')">
       Deszyfrowanie strumieniowe
     </button>
   </mat-card>
