@@ -66,13 +66,13 @@ app.post('/upload/encryption', async (req, res) => {
           if(req.body.algorithm == '0') {
             console.log("encryption with aes")
             encrypted = cryptoUtils.cryptFileAESWithSalt(file, false);
-          } else 
+          } else
           {
             console.log("encryption with rsa")
             encrypted = cryptoUtils.cryptFileRSA(file, false);
           }
 
-          const duration = (performance.now() - start).toPrecision(2)
+          const duration = (performance.now() - start).toFixed(2)
 
           console.log("measured encryption duration " + duration)
 
@@ -114,13 +114,13 @@ app.post('/upload/decryption', async (req, res) => {
           if(req.body.algorithm == '0') {
             console.log("decryption with aes")
             decrypted = cryptoUtils.cryptFileAESWithSalt(file, true);
-          } else 
+          } else
           {
             console.log("decryption with rsa")
             decrypted = cryptoUtils.cryptFileRSA(file, true);
           }
 
-          const duration = (performance.now() - start).toPrecision(2)
+          const duration = (performance.now() - start).toFixed(2)
           console.log("measured decryption duration " + duration)
 
           randomName = Math.floor(Math.random() * 999999999) + file.name;
@@ -137,7 +137,7 @@ app.post('/upload/decryption', async (req, res) => {
                 size: file.size,
                 time: duration
             }
-        });   
+        });
 
       }
   } catch (err) {
