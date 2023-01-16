@@ -12,11 +12,13 @@ export class AppComponent {
     file: File | null = null;
     fileUploaded$: Observable<boolean> = this.fileService.fileUploaded$;
     loading$: Observable<boolean> = this.fileService.loading$;
+    currentFile$: Observable<string> = this.fileService.uploadedFileName$;
     constructor(private fileService: FileUploadService) {}
 
     onDeleteFile() {
       this.file = null;
       this.fileName = '';
+      this.fileService.updateFileState(false);
     }
 
     onFileSelected(event: any) {
@@ -51,13 +53,13 @@ export class AppComponent {
 
     streamEncrypt(type: string) {
       if(this._validateFile()) {
-
+        this.fileService.encryptStream(this.file, type);
       }
     }
 
     streamDecrypt(type: string) {
       if(this._validateFile()) {
-
+        this.fileService.decryptStream(this.file, type);
       }
     }
 

@@ -17,7 +17,7 @@
   <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="upload()">
     Upload bez szyfrowania
   </button>
-  <button mat-raised-button color="primary" [disabled]="(fileUploaded$ | async) === false" (click)="download()">
+  <button mat-raised-button color="primary" [disabled]="((fileUploaded$ | async) === false) || (loading$ | async)" (click)="download()">
     Pobierz plik z serwera
   </button>
 </div>
@@ -36,6 +36,8 @@
     <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamEncrypt('0')">
       Szyfrowanie strumieniowe
     </button>
+
+    <hr>
 
     <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="decrypt('0')">
       Deszyfrowanie całościowe
@@ -59,6 +61,8 @@
     <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="streamEncrypt('1')">
       Szyfrowanie strumieniowe
     </button>
+    
+    <hr>
 
     <button mat-raised-button color="primary" [disabled]="loading$ | async" (click)="decrypt('1')">
       Deszyfrowanie całościowe
