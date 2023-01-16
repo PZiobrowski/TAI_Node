@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const fs = require('fs');
 
 const key = crypto.createHash('sha256').update(String(process.env.KEY)).digest('base64').slice(0, 32);
 const salt = process.env.SALT || crypto.randomBytes(8).toString("hex");
@@ -17,40 +18,46 @@ const cryptFileAESWithSalt = (
       return decrypted;
     }
   };
-  
-  
+
   const cryptFileRSA = (
     file,
     decrypt = false
   ) => {
     if (!decrypt) {
-    
-      const publicKey = Buffer.from(
-        fs.readFileSync("public.pem", { encoding: "utf-8" })
-      ); 
-      const encryptedData = crypto.publicEncrypt(
-        {
-          key: publicKey,
-          padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-          oaepHash: "sha256",
-        },
-        // We convert the data string to a buffer using `Buffer.from`
-        Buffer.from(file.data)
-      );
+      const publicKey = Buffer.from(fs.readFileSync("public.pem", { encoding: "utf-8" }));
+
+      const fileBuffer = Buffer.from(file.data);
+      let encryptedData = Buffer.alloc(0);
+      for (let i = 0; i < fileBuffer.length; i += 128) {
+        const chunk = fileBuffer.subarray(i, Math.min(i + 128, fileBuffer.length));
+        const encrypted = crypto.publicEncrypt(
+          {
+            key: publicKey,
+            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+            oaepHash: "sha256"
+          },
+          chunk
+        );
+        encryptedData = Buffer.concat([encryptedData, encrypted]);
+      }
       return encryptedData;
     } else {
-      const privateKey = fs.readFileSync("private.pem", { encoding: "utf-8" });
-      const decryptedData = crypto.privateDecrypt(
-        {
-          key: privateKey,
-          // In order to decrypt the data, we need to specify the
-          // same hashing function and padding scheme that we used to
-          // encrypt the data in the previous step
-          padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-          oaepHash: "sha256",
-        },
-        Buffer.from(file.data)
-      );
+      const privateKey = Buffer.from(fs.readFileSync("private.pem", { encoding: "utf-8" }));
+
+      const encryptedBuffer = Buffer.from(file.data);
+      let decryptedData = Buffer.alloc(0);
+      for (let i = 0; i < encryptedBuffer.length; i += 256) {
+        const encrypted = encryptedBuffer.subarray(i, i + 256);
+        const chunk = crypto.privateDecrypt(
+          {
+            key: privateKey,
+            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+            oaepHash: "sha256"
+          },
+          encrypted
+        );
+        decryptedData = Buffer.concat([decryptedData, chunk]);
+      }
       return decryptedData;
     }
   };
@@ -59,12 +66,12 @@ const cryptFileAESWithSalt = (
     // The standard secure default length for RSA keys is 2048 bits
     modulusLength: 2048,
   });
-  
+
   const exportedPublicKeyBuffer = publicKey.export({
     type: "pkcs1",
     format: "pem",
   });
-  
+
   const exportedPrivateKeyBuffer = privateKey.export({
     type: "pkcs1",
     format: "pem",
