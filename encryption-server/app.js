@@ -117,13 +117,12 @@ app.post('/upload/encryption-stream', async (req, res) => {
 
           if (req.body.algorithm == '0') {
             console.log("encryption with aes")
-            cryptoUtils.cryptFileAESWithSalt(file, false);
+            cryptoUtils.streamCryptFileAESWithSalt(file, outStream, false);
           } else {
             console.log("encryption with rsa")
             cryptoUtils.streamCryptFileRSA(file, outStream, false);
           }
 
-          outStream.end();
           const duration = (performance.now() - start).toFixed(2)
 
           console.log("measured encryption duration " + duration)
@@ -213,13 +212,12 @@ app.post('/upload/decryption-stream', async (req, res) => {
 
           if (req.body.algorithm == '0') {
             console.log("decryption with aes")
-            cryptoUtils.cryptFileAESWithSalt(file, true);
+            cryptoUtils.streamCryptFileAESWithSalt(file, outStream, true);
           } else {
             console.log("decryption with rsa")
             cryptoUtils.streamCryptFileRSA(file, outStream, true);
           }
 
-          outStream.end();
           const duration = (performance.now() - start).toFixed(2)
 
           console.log("measured decryption duration " + duration)

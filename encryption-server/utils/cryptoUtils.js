@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs');
+const { Readable, pipeline } = require("stream") 
 
 const key = crypto.createHash('sha256').update(String(process.env.KEY)).digest('base64').slice(0, 32);
 const salt = process.env.SALT || crypto.randomBytes(8).toString("hex");
@@ -18,6 +19,31 @@ const cryptFileAESWithSalt = (
       return decrypted;
     }
   };
+
+  
+  const streamCryptFileAESWithSalt = (
+    file,
+    outStream,
+    decrypt = false
+  ) => {
+    if (!decrypt) {
+        const cipher = crypto.createCipheriv('aes-256-ctr', key, salt);
+        const inStream = Readable.from(file.data);
+
+        pipeline(inStream, cipher, outStream, (err) => {
+            if (err) throw err;
+        });
+
+    } else {
+        const cipher = crypto.createDecipheriv('aes-256-ctr', key, salt);
+        const encStream = Readable.from(file.data);
+
+        pipeline(encStream, cipher, outStream, (err) => {
+            if (err) throw err;
+        });
+    }
+  };
+
 
   const cryptFileRSA = (
     file,
@@ -100,6 +126,7 @@ const cryptFileAESWithSalt = (
         outStream.write(encrypted);
       }
     }
+    outStream.end();
   };
 
   const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
@@ -117,4 +144,4 @@ const cryptFileAESWithSalt = (
     format: "pem",
   });
 
-  module.exports = {cryptFileAESWithSalt, cryptFileRSA, exportedPublicKeyBuffer, exportedPrivateKeyBuffer, streamCryptFileRSA}
+  module.exports = {cryptFileAESWithSalt, cryptFileRSA, exportedPublicKeyBuffer, exportedPrivateKeyBuffer, streamCryptFileAESWithSalt ,streamCryptFileRSA}
