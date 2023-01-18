@@ -15,7 +15,10 @@ npm install -g @angular/cli
  ~~~
  npm i @angular/material
  ~~~
-
+Install file-saver
+ ~~~
+npm i file-saver
+ ~~~
 ## Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
