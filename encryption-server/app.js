@@ -77,8 +77,56 @@ app.post('/upload/encryption', async (req, res) => {
           console.log("measured encryption duration " + duration)
 
           randomName = Math.floor(Math.random() * 999999999) + file.name;
-
           fs.createWriteStream('./uploads/' + randomName).write(encrypted)
+
+          const durationWithSave = (performance.now() - start).toFixed(2)
+          console.log("measured encryption+save duration " + durationWithSave)
+
+          //send response
+          res.send({
+              status: true,
+              message: 'File is encrypted',
+              data: {
+                  name: randomName,
+                  mimetype: file.mimetype,
+                  size: file.size,
+                  time: duration
+              }
+          });
+      }
+  } catch (err) {
+      console.log(err)
+      res.status(500).send(err);
+  }
+});
+
+app.post('/upload/encryption-stream', async (req, res) => {
+  try {
+      if(!req.files) {
+          res.send({
+              status: false,
+              message: 'No file uploaded'
+          });
+      } else {
+          let file = req.files.file;
+
+          const start = performance.now();
+
+          const randomName = Math.floor(Math.random() * 999999999) + file.name;
+          const outStream = fs.createWriteStream('./uploads/' + randomName);
+
+          if (req.body.algorithm == '0') {
+            console.log("encryption with aes")
+            cryptoUtils.cryptFileAESWithSalt(file, false);
+          } else {
+            console.log("encryption with rsa")
+            cryptoUtils.streamCryptFileRSA(file, outStream, false);
+          }
+
+          outStream.end();
+          const duration = (performance.now() - start).toFixed(2)
+
+          console.log("measured encryption duration " + duration)
 
           //send response
           res.send({
@@ -124,8 +172,57 @@ app.post('/upload/decryption', async (req, res) => {
           console.log("measured decryption duration " + duration)
 
           randomName = Math.floor(Math.random() * 999999999) + file.name;
-
           fs.createWriteStream('./uploads/' + randomName).write(decrypted)
+
+          const durationWithSave = (performance.now() - start).toFixed(2)
+          console.log("measured decryption+save duration " + durationWithSave)
+
+          //send response
+          res.send({
+            status: true,
+            message: 'File is decrypted',
+            data: {
+                name: randomName,
+                mimetype: file.mimetype,
+                size: file.size,
+                time: duration
+            }
+        });
+
+      }
+  } catch (err) {
+      console.log(err)
+      res.status(500).send(err);
+  }
+});
+
+app.post('/upload/decryption-stream', async (req, res) => {
+  try {
+      if(!req.files) {
+          res.send({
+              status: false,
+              message: 'No file uploaded'
+          });
+      } else {
+          let file = req.files.file;
+
+          const start = performance.now();
+
+          const randomName = Math.floor(Math.random() * 999999999) + file.name;
+          const outStream = fs.createWriteStream('./uploads/' + randomName);
+
+          if (req.body.algorithm == '0') {
+            console.log("decryption with aes")
+            cryptoUtils.cryptFileAESWithSalt(file, true);
+          } else {
+            console.log("decryption with rsa")
+            cryptoUtils.streamCryptFileRSA(file, outStream, true);
+          }
+
+          outStream.end();
+          const duration = (performance.now() - start).toFixed(2)
+
+          console.log("measured decryption duration " + duration)
 
           //send response
           res.send({
