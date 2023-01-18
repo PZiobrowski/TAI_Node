@@ -7,7 +7,7 @@
         <mat-icon>attach_file</mat-icon>
     </button>
 
-    <button mat-mini-fab color="warn" class="delete-btn" (click)="onDeleteFile()">
+    <button mat-mini-fab color="warn" class="delete-btn" (click)="onDeleteFile()"  [disabled]="file==null ">
       <mat-icon>delete_forever</mat-icon>
   </button>
   </div>
