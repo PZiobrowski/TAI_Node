@@ -7,7 +7,7 @@
     justify-content: space-evenly;
     align-items: center;
     flex-wrap: wrap;
-    button:hover {
+    button:enabled:hover {
         color: rgb(207, 126, 126);
         transform: scale(1.1);
         transition-duration: 500ms; 
